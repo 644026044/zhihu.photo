@@ -69,3 +69,5 @@ target/
 # OS X dir
 .DS_Store
 temp/
+
+deploy.py
