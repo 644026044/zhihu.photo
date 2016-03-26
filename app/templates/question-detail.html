@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<div class="container">
+    <!--<div class="page-header" style="margin-top: -10px;">-->
+    <!--<h3>首页</h3>-->
+    <!--</div>-->
+
+    <div class="main-items col-md-12">
+        <div class="zh-qu-title">
+            <a target="_blank" href="https://www.zhihu.com/question/{{ question['_id'] }}">
+                [{{ question['follow_cnt'] }} <span class="glyphicon glyphicon-sunglasses"></span>]
+                {{ question['title'] }}
+            </a>
+                <span class="subtitle">
+                    -
+                    {% for topic in question['topics'] %}
+                    {% if loop.index != 1 %}|{% endif %}
+                    <a target="_blank" href="{{ topic['link'] }}">
+                        {{ topic['topic'] }}
+                    </a>
+                    {% endfor %}
+                </span>
+        </div>
+        <hr>
+        <div class="answers">
+            {% for answer in answers %}
+            {% if loop.index != 1 %}<hr>{% endif %}
+            <div class="answer-item clearfix">
+                <div>
+                <a target="{% if answer['a_link'] %}_blank{% endif %}" href="{{ answer['a_link'] }}">{{ answer['a_name'] }}</a>
+                的回答（<a target="_blank" href="{{ answer['url'] }}">阅读原文</a>）
+                </div>
+                <div class="img-wrap-div">
+                    {% for img in answer['imgs'] %}
+                    <div class="col-md-self-2">
+                        <img class="img-view" src="{{ url_for('api.download', hashid=img) }}">
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="center_div">
+        {{ pagination.links }}
+    </div>
+</div>
+{% endblock %}
