@@ -2,6 +2,8 @@
 # encoding=utf-8
 
 from pymongo import MongoClient
+from xtls.timeparser import now
+
 from config import *
 
 MONGO = MongoClient(MONGO_HOST, MONGO_PORT)
@@ -15,6 +17,15 @@ def select(coll, filter, limit=20, skip=0, sort=('updateTime', -1)):
 
 def select_one(coll, filter):
     return MONGO[DB][coll].find_one(filter)
+
+
+def insert(coll, data):
+    data['updateTime'] = now()
+    MONGO[DB][coll].find_one_and_update(
+        {'_id': data['_id']},
+        {'$set': data},
+        upsert=True
+    )
 
 
 if __name__ == '__main__':
