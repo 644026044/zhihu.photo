@@ -21,7 +21,6 @@ def index(page=1):
             if len(imgs) >= 5:
                 break
         question['imgs'] = imgs[:5]
-    print count
     data = {
         'active': 'index',
         'title': u'首页',
@@ -35,8 +34,16 @@ def index(page=1):
 @web.route('/detail/<qid>/<int:page>')
 def detail(qid, page=1):
     question = dao.select_one(QUESTION_COLL, {'_id': qid})
-
-    return str(question)
+    answers = []
+    for answer in question['answers'][(page-1)*PAGE_SIZE:page*PAGE_SIZE]:
+        answers.append(dao.select_one(ANSWER_COLL, {'_id': answer}))
+    data = {
+        'title': question['title'],
+        'answers': answers,
+        'question': question,
+        'pagination': Pagination(page=page, per_page=PAGE_SIZE, total=len(question['answers']), css_framework='bootstrap3')
+    }
+    return render_template('question-detail.html', **data)
 
 
 @web.route('/about')
