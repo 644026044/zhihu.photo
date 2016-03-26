@@ -2,17 +2,41 @@
 # encoding=utf-8
 
 from flask import *
-
+from .. import dao
+from ..config import *
+from flask.ext.paginate import Pagination
 web = Blueprint('web', __name__)
 
 
 @web.route('/')
-def index():
+@web.route('/<int:page>')
+def index(page=1):
+    questions, count = dao.select(QUESTION_COLL, {}, limit=PAGE_SIZE, skip=(page-1)*PAGE_SIZE)
+
+    for question in questions:
+        imgs = []
+        for answer in question['answers']:
+            the_ans = dao.select_one(ANSWER_COLL, {'_id': answer})
+            imgs.extend(the_ans['imgs'])
+            if len(imgs) >= 5:
+                break
+        question['imgs'] = imgs[:5]
+    print count
     data = {
         'active': 'index',
-        'title': u'首页'
+        'title': u'首页',
+        'questions': questions,
+        'pagination': Pagination(page=page, per_page=PAGE_SIZE, total=count, css_framework='bootstrap3')
     }
     return render_template('index.html', **data)
+
+
+@web.route('/detail/<qid>')
+@web.route('/detail/<qid>/<int:page>')
+def detail(qid, page=1):
+    question = dao.select_one(QUESTION_COLL, {'_id': qid})
+
+    return str(question)
 
 
 @web.route('/about')
