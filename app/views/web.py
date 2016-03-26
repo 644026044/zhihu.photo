@@ -2,9 +2,11 @@
 # encoding=utf-8
 
 from flask import *
+from flask.ext.paginate import Pagination
+
 from .. import dao
 from ..config import *
-from flask.ext.paginate import Pagination
+
 web = Blueprint('web', __name__)
 
 
