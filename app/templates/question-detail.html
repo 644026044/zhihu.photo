@@ -9,8 +9,11 @@
     <div class="main-items col-md-12">
         <div class="zh-qu-title">
             <a target="_blank" href="https://www.zhihu.com/question/{{ question['_id'] }}">
-                [{{ question['follow_cnt'] }} <span class="glyphicon glyphicon-sunglasses"></span>]
                 {{ question['title'] }}
+                <span class="subtitle">
+                    ( <span class="glyphicon glyphicon-sunglasses"></span> {{ question['follow_cnt'] }} 人关注 |
+                    <span class="glyphicon glyphicon-picture"></span> {{ question['answers']|length }}个带图回答 )
+                </span>
             </a>
                 <span class="subtitle">
                     -

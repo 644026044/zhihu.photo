@@ -3,7 +3,7 @@
 {% block page_content %}
 <div class="container">
     <div class="page-header" style="margin-top: -10px;">
-        <h3>首页</h3>
+        <h3>图看知乎：知乎的相册</h3>
     </div>
 
     <div class="main-items col-md-12">
@@ -14,8 +14,11 @@
         <div class="zh-question-item clearfix">
             <div class="zh-qu-title">
                 <a href="{{ url_for('web.detail', qid=question['_id']) }}">
-                    [{{ question['follow_cnt'] }} <span class="glyphicon glyphicon-sunglasses"></span>]
                     {{ question['title'] }}
+                    <span class="subtitle">
+                        ( <span class="glyphicon glyphicon-sunglasses"></span> {{ question['follow_cnt'] }} 人关注 |
+                        <span class="glyphicon glyphicon-picture"></span> {{ question['answers']|length }}个带图回答 )
+                    </span>
                 </a>
                 <span class="subtitle">
                     -
@@ -35,11 +38,11 @@
                 {% endfor %}
             </div>
         </div>
-        <br>
         {% endfor %}
     </div>
     <div class="center_div">
-    {{ pagination.links }}
+        {{ pagination.links }}
     </div>
+
 </div>
 {% endblock %}
