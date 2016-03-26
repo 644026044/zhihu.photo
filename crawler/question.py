@@ -2,6 +2,7 @@
 # encoding=utf-8
 
 import json
+from time import sleep
 
 from xtls.basecrawler import BaseCrawler
 from xtls.codehelper import forever
@@ -57,7 +58,17 @@ class QuestionCrawler(BaseCrawler):
 
 
 def main():
-    QuestionCrawler().run('24214727')
+    question_crawler = QuestionCrawler()
+    for times in forever(1):
+        logger.info('now times : %s' % times)
+        todo = MONGO[DB][QUESTION_TODO_COLL].find_one()
+        if not todo:
+            logger.info('no more task, sleeping')
+            sleep(SLEEP_TIME)
+            continue
+        logger.info('crawling question %s' % todo['_id'])
+        question_crawler.run(todo['_id'])
+        MONGO[DB][QUESTION_TODO_COLL].delete_one({'_id': todo['_id']})
 
 
 if __name__ == '__main__':
