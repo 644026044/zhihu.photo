@@ -5,5 +5,41 @@
     <div class="page-header" style="margin-top: -10px;">
         <h3>首页</h3>
     </div>
+
+    <div class="main-items col-md-12">
+        {% for question in questions %}
+        {% if loop.index != 1 %}
+        <hr>
+        {% endif %}
+        <div class="zh-question-item clearfix">
+            <div class="zh-qu-title">
+                <a href="{{ url_for('web.detail', qid=question['_id']) }}">
+                    [{{ question['follow_cnt'] }} <span class="glyphicon glyphicon-sunglasses"></span>]
+                    {{ question['title'] }}
+                </a>
+                <span class="subtitle">
+                    -
+                    {% for topic in question['topics'] %}
+                    {% if loop.index != 1 %}|{% endif %}
+                    <a target="_blank" href="{{ topic['link'] }}">
+                        {{ topic['topic'] }}
+                    </a>
+                    {% endfor %}
+                </span>
+            </div>
+            <div class="img-wrap-div">
+                {% for img in question['imgs'] %}
+                <div class="col-md-self-2">
+                    <img class="img-view" src="{{ url_for('api.download', hashid=img) }}">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <br>
+        {% endfor %}
+    </div>
+    <div class="center_div">
+    {{ pagination.links }}
+    </div>
 </div>
 {% endblock %}
