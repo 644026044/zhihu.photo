@@ -102,4 +102,12 @@
 
 .img-view {
     width: 100%;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    box-shadow: 4px 4px 4px #bbb;
+}
+.img-view:hover {
+    -webkit-filter: blur(2px);
+    cursor: pointer;
 }
