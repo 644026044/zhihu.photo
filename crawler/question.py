@@ -20,6 +20,7 @@ class QuestionCrawler(BaseCrawler):
 
     def __init__(self):
         super(QuestionCrawler, self).__init__()
+        self._request = load_session()
         self.xsrf = load_xsrf()
         self._request.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36'
         logger.info('init question crawler done.')
@@ -34,6 +35,7 @@ class QuestionCrawler(BaseCrawler):
 
         rst = []
         for index, item in enumerate(rst_json['msg']):
+            sleep(1)
             soup = BeautifulSoup(item)
             answer = AnswerParser(self, soup).parse()  # self.build_answer_item(soup)
             if not answer:
@@ -59,6 +61,7 @@ class QuestionCrawler(BaseCrawler):
 
 def main():
     question_crawler = QuestionCrawler()
+    # question_crawler.run('36430439')
     for times in forever(1):
         logger.info('now times : %s' % times)
         todo = MONGO[DB][QUESTION_TODO_COLL].find_one()
