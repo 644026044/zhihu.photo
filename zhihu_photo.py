@@ -6,11 +6,13 @@ import sys
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.wsgi import WSGIContainer
+from werkzeug.contrib.fixers import ProxyFix
 from xtls.logger import get_logger
 
 from app import create_app
 
 app = create_app()
+app.wsgi_app = ProxyFix(app.wsgi_app)
 logger = get_logger(__file__)
 
 if __name__ == '__main__':
