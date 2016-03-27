@@ -17,3 +17,4 @@ api = Blueprint('api', __name__, url_prefix='/api')
 def download(hashid):
     file_path = os.path.join(os.path.join(FILE_PATH, hashid[:4]), hashid)
     return send_file(file_path)
+
