@@ -16,10 +16,10 @@
                 </span>
             </a>
                 <span class="subtitle">
-                    -
+
                     {% for topic in question['topics'] %}
-                    {% if loop.index != 1 %}|{% endif %}
-                    <a target="_blank" href="{{ topic['link'] }}">
+                    {# {% if loop.index != 1 %}|{% endif %} #}
+                    <a class="a-topic" target="_blank" href="{{ topic['link'] }}">
                         {{ topic['topic'] }}
                     </a>
                     {% endfor %}
