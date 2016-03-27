@@ -10,6 +10,7 @@ from xtls.codehelper import trytry
 from xtls.logger import get_logger
 from xtls.timeparser import now
 from xtls.util import sha1
+from xtls.basecrawler import BaseCrawler
 
 from config import *
 
@@ -17,17 +18,14 @@ logger = get_logger(__file__)
 ZHIHU_URL = 'https://www.zhihu.com'
 MONGO = MongoClient(MONGO_HOST, MONGO_PORT)
 PATTERN_NUM = re.compile(ur'\d+')
+PATTERN_IMG = re.compile(ur'"(https://pic[\d].zhimg.com/\w+?_b.\w+)"')
 
 
 def load_session():
-    session = requests.Session()
-    session.headers['Cookie'] = ''
-    session.headers['User-Agent'] = ''
-    return session
+    pass
 
 
 def load_xsrf():
-    # TODO
     return ''
 
 
@@ -40,10 +38,11 @@ def save(content, filename):
         fp.write(content)
 
 
-class _Parser(object):
+class _Parser(BaseCrawler):
     COLL = ''
 
     def __init__(self, crawler, soup):
+        super(_Parser, self).__init__()
         self.crawler = crawler
         self.soup = soup
 
@@ -78,7 +77,14 @@ class AnswerParser(_Parser):
 
     def parse(self):
         answer_soup = self.soup.find('div', class_='zm-editable-content clearfix')
-        imgs = answer_soup.find_all('img', class_='origin_image zh-lightbox-thumb lazy')
+        if not answer_soup:
+            if u'回答建议修改：涉及淫秽色情低俗信息' in unicode(self.soup):
+                return None
+        # imgs = answer_soup.find_all('img', class_='origin_image zh-lightbox-thumb lazy')
+        imgs = list(set(PATTERN_IMG.findall(unicode(answer_soup))))
+        # print imgs
+        # print '----'
+
         if not imgs:
             return None
 
@@ -95,8 +101,9 @@ class AnswerParser(_Parser):
             answer['agree_cnt'] = int(count)
 
         for img in imgs:
-            img = img['data-actualsrc']
-            content = self.crawler.get(img, timeout=120)
+            # img = img['data-actualsrc']
+            # content = self.crawler.get(img, timeout=120)
+            content = self.get(img, timeout=120)
             filename = sha1(content) + img[img.rfind('.'):]
             save(content, filename)
             answer['imgs'].append(filename)
@@ -152,3 +159,7 @@ class QuestionParser(_Parser):
                 })
 
         return question
+
+if __name__ == '__main__':
+    # print >> open('123.png', 'wb'), requests.get('https://pic1.zhimg.com/2d5850d4f03c75d323138318e5215eb8_b.png').content
+    pass
