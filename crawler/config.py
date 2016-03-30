@@ -8,4 +8,6 @@ ANSWER_COLL = 'answer'
 QUESTION_COLL = 'question'
 QUESTION_TODO_COLL = 'questionTodo'
 
+TOPIC_COLL = 'topic'
+
 SLEEP_TIME = 30
