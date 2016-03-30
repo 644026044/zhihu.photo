@@ -11,3 +11,5 @@ QUESTION_COLL = 'question'
 QUESTION_TODO_COLL = 'questionTodo'
 
 PAGE_SIZE = 5
+
+SQLITE_DB_PATH = '/Users/xlzd/Workspace/GitHub/zhihu.photo/qbcrimgs.db'
