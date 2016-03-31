@@ -37,7 +37,7 @@ class QuestionCrawler(BaseCrawler):
         for index, item in enumerate(rst_json['msg']):
             sleep(1)
             soup = BeautifulSoup(item)
-            answer = AnswerParser(self, soup).parse()  # self.build_answer_item(soup)
+            answer = AnswerParser(self, soup).parse_imgs()  # self.build_answer_item(soup)
             if not answer:
                 continue
             AnswerParser.save(answer)
@@ -54,14 +54,14 @@ class QuestionCrawler(BaseCrawler):
             ids, has_more = self._run(question_id, index * 20)
             question['answers'].extend(ids)
             QuestionParser.save(question)
-            logger.info('update question %s' % question_id)
+            logger.info('update question %s-%s' % (index, question_id))
             if not has_more:
                 break
 
 
 def main():
     question_crawler = QuestionCrawler()
-    # question_crawler.run('36430439')
+    # question_crawler.run('39833760')
     for times in forever(1):
         logger.info('now times : %s' % times)
         todo = MONGO[DB][QUESTION_TODO_COLL].find_one()
