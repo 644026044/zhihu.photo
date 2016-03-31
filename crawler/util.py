@@ -22,11 +22,13 @@ PATTERN_IMG = re.compile(ur'"(https://pic[\d].zhimg.com/\w+?_b.\w+)"')
 
 
 def load_session():
+    # todo
     pass
 
 
 def load_xsrf():
-    return ''
+    # todo
+    pass
 
 
 def save(content, filename):
@@ -41,9 +43,8 @@ def save(content, filename):
 class _Parser(BaseCrawler):
     COLL = ''
 
-    def __init__(self, crawler, soup):
+    def __init__(self, soup):
         super(_Parser, self).__init__()
-        self.crawler = crawler
         self.soup = soup
 
     @classmethod
@@ -59,8 +60,8 @@ class _Parser(BaseCrawler):
 class AnswerParser(_Parser):
     COLL = ANSWER_COLL
 
-    def __init__(self, crawler, soup):
-        super(AnswerParser, self).__init__(crawler, soup)
+    def __init__(self, soup):
+        super(AnswerParser, self).__init__(soup)
 
     @classmethod
     def parse_edit_time(cls, soup):
@@ -75,25 +76,19 @@ class AnswerParser(_Parser):
             return parse_time(tip), parse_time(soup.getText().strip())
         return parse_time(soup.getText().strip()), ''
 
-    def parse(self):
+    def parse_imgs(self):
         answer_soup = self.soup.find('div', class_='zm-editable-content clearfix')
         if not answer_soup:
             if u'回答建议修改：涉及淫秽色情低俗信息' in unicode(self.soup):
                 return None
-        # imgs = answer_soup.find_all('img', class_='origin_image zh-lightbox-thumb lazy')
         imgs = list(set(PATTERN_IMG.findall(unicode(answer_soup))))
-        # print imgs
-        # print '----'
-
         if not imgs:
             return None
-
         answer = {
             'url': ZHIHU_URL + self.soup.find('div', class_='zm-item-rich-text js-collapse-body')['data-entry-url'],
             'agree_cnt': 0, 'a_link': '', 'a_name': u'匿名用户',
             'r_time': '', 'e_time': '', 'comment_cnt': '', 'imgs': [], '_id': '',
         }
-
         with trytry():
             count = self.soup.find('span', class_='count').getText().strip().lower()
             if 'k' in count:
@@ -101,11 +96,10 @@ class AnswerParser(_Parser):
             answer['agree_cnt'] = int(count)
 
         for img in imgs:
-            # img = img['data-actualsrc']
-            # content = self.crawler.get(img, timeout=120)
             content = self.get(img, timeout=120)
             filename = sha1(content) + img[img.rfind('.'):]
             save(content, filename)
+            # answer['imgs'].append({'local': filename, 'raw': img})
             answer['imgs'].append(filename)
 
         author = self.soup.find('div', class_='zm-item-answer-author-info')
@@ -121,17 +115,15 @@ class AnswerParser(_Parser):
             comment = self.soup.find('a', class_=' meta-item toggle-comment').getText().strip()
             if comment != u'添加评论':
                 answer['comment_cnt'] = comment[:-3].strip()
-
         answer['_id'] = answer['url'].replace('https://www.zhihu.com/question/', '').replace('/answer/', '-')
-
         return answer
 
 
 class QuestionParser(_Parser):
     COLL = QUESTION_COLL
 
-    def __init__(self, crawler, soup):
-        super(QuestionParser, self).__init__(crawler, soup)
+    def __init__(self, soup):
+        super(QuestionParser, self).__init__(soup)
 
     def parse(self):
         question = {
