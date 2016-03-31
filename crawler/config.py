@@ -9,5 +9,6 @@ QUESTION_COLL = 'question'
 QUESTION_TODO_COLL = 'questionTodo'
 
 TOPIC_COLL = 'topic'
+HOT_ANSWER_COLL = 'hotAnswer'
 
 SLEEP_TIME = 30
