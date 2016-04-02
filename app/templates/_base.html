@@ -6,7 +6,9 @@
     {%- block head %}
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="VIEWPORT" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="http://7xkpi6.com1.z0.glb.clouddn.com/avatar.png">
+    <link rel="icon" href="http://7xkpi6.com1.z0.glb.clouddn.com/avatar.png"/>
+    <link rel="Shortcut Icon" href="http://7xkpi6.com1.z0.glb.clouddn.com/avatar.png"/>
+    <link rel="Bootmark" href="http://7xkpi6.com1.z0.glb.clouddn.com/avatar.png"/>
     <meta name="keywords" content="图说知乎,知乎,图片,xlzd,xlzd.me,知乎图片,xlzd杂谈,blog of xlzd"/>
     <meta name="description" content="图说知乎-知乎的相册。知乎钓鱼问题的图片集~~~"/>
     <title>{% block title %}{% endblock title %}</title>
@@ -43,6 +45,18 @@
     })();
 </script>
 
+<script type="text/javascript">
+    var duoshuoQuery = {short_name: "zhihuphoto"};
+    (function () {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+        || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
 </body>
 {%- endblock html %}
 </html>

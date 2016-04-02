@@ -51,5 +51,8 @@
     <div class="center_div">
         {{ pagination.links }}
     </div>
+    <hr>
+    <div class="ds-thread" data-thread-key="{{ question['_id'] }}" data-title="{{ title }} - 图看知乎" data-url="http://zhihu.photo/detail/{{ question['_id'] }}"></div>
+
 </div>
 {% endblock %}
