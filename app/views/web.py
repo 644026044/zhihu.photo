@@ -48,10 +48,23 @@ def detail(qid, page=1):
     return render_template('question-detail.html', **data)
 
 
-@web.route('/about')
+@web.route('/about/')
 def about():
     data = {
         'active': 'about',
         'title': u'关于'
     }
     return render_template('about.html', **data)
+
+
+@web.route('/nobody/')
+@web.route('/nobody/<int:page>')
+def nobody(page=1):
+    imgs = dao.get_qbcr_imgs(page)
+    data = {
+        'active': 'nobody',
+        'title': u'佚名图集',
+        'images': imgs,
+        'pagination': Pagination(page=page, per_page=PAGE_SIZE, total=dao.get_qbcr_count(), css_framework='bootstrap3')
+    }
+    return render_template('yiming.html', **data)
