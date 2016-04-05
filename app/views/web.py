@@ -13,7 +13,7 @@ web = Blueprint('web', __name__)
 @web.route('/')
 @web.route('/<int:page>')
 def index(page=1):
-    questions, count = dao.select(QUESTION_COLL, {}, limit=PAGE_SIZE, skip=(page-1)*PAGE_SIZE)
+    questions, count = dao.select(QUESTION_COLL, {}, limit=PAGE_SIZE, skip=(page - 1) * PAGE_SIZE)
 
     for question in questions:
         imgs = []
@@ -37,13 +37,14 @@ def index(page=1):
 def detail(qid, page=1):
     question = dao.select_one(QUESTION_COLL, {'_id': qid})
     answers = []
-    for answer in question['answers'][(page-1)*PAGE_SIZE:page*PAGE_SIZE]:
+    for answer in question['answers'][(page - 1) * PAGE_SIZE:page * PAGE_SIZE]:
         answers.append(dao.select_one(ANSWER_COLL, {'_id': answer}))
     data = {
         'title': question['title'],
         'answers': answers,
         'question': question,
-        'pagination': Pagination(page=page, per_page=PAGE_SIZE, total=len(question['answers']), css_framework='bootstrap3')
+        'pagination': Pagination(page=page, per_page=PAGE_SIZE, total=len(question['answers']),
+                                 css_framework='bootstrap3')
     }
     return render_template('question-detail.html', **data)
 
