@@ -128,8 +128,10 @@ def main():
     # TopicHotCrawler('19552832').run()
     for index, item in enumerate(MONGO[DB][TOPIC_COLL].find().batch_size(1)):
         logger.info('now topic %s-%s' % (index, item['_id']))
-        TopicHotCrawler(item['_id']).run()
+        with trytry(logger=logger):
+            TopicHotCrawler(item['_id']).run()
 
 
 if __name__ == '__main__':
-    main()
+    while True:
+        main()
