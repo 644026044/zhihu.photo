@@ -1,0 +1,57 @@
+{% extends "wc_base.html" %}
+
+{% block page_content %}
+<div class="container">
+    <div class="main-items col-md-12">
+        <div class="zh-qu-title">
+<span class="subtitle">
+            {% if local %}
+                <a class="a-topic" href="{{ url_for('wechat.cl_detail', pid=post['_id']) }}">raw</a>
+            {% else %}
+                <a class="a-topic" href="{{ url_for('wechat.cl_detail', pid=post['_id']) }}?local=yes">local</a>
+            {% endif %}
+                </span>
+
+                <span class="subtitle">
+                    <a class="a-topic" href="#">
+                        {{ post['category'] }}
+                    </a>
+                </span>
+                <span class="subtitle">
+                    <a class="a-topic" href="#">
+                        {{ post['update'].strftime('%Y-%m-%d %H:%M:%S') }}
+                    </a>
+                </span>
+            <br>
+            <a target="_blank" href="#">
+                {{ post['title'] }}
+                    <span class="subtitle">
+                        [ {{ post['img_count'] }} <span class="glyphicon glyphicon-picture"></span> ]
+                    </span>
+            </a>
+        </div>
+        <hr>
+        <div class="answers">
+            {% for img in post['images'] %}
+
+            <div class="nobody-div clearfix">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    {% if local %}
+                    <img class="img-view" src="{{ url_for('api.cl_download', hashid=img['hash']) }}">
+                    {% else %}
+                    <img class="img-view" src="{{ img['url'] }}">
+                    {% endif %}
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <hr>
+    <div class="ds-thread" data-thread-key="{{ post['_id'] }}" data-title="{{ title }} - 图看知乎"
+         data-url="http://zhihu.photo/cltt/detail/{{ post['_id'] }}"></div>
+
+</div>
+{% endblock %}
