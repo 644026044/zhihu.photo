@@ -81,6 +81,7 @@ def nobody(page=1):
 @web.route('/cltt/<cname>/<int:page>')
 def cltt(cname=None, page=1):
     cname = cname or request.args.get('cname', None)
+    all_ = request.args.get('all', False)
 
     filter = {}
     title = u'草榴贴图 - 第 %d 页' % page
@@ -93,11 +94,16 @@ def cltt(cname=None, page=1):
                               limit=10,
                               skip=(page - 1) * PAGE_SIZE,
                               sort=('update', -1))
+    if not all_:
+        for post in posts:
+            post['images'] = post['images'][:5]
+
     data = {
         'active': 'cltt',
         'title': title,
         'posts': posts,
         'local': request.args.get('local', False),
+        'all': all_,
         'pagination': Pagination(page=page, per_page=PAGE_SIZE, total=count, css_framework='bootstrap3')
     }
     return render_template('cltt.html', **data)
