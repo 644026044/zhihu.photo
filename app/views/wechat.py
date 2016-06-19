@@ -1,42 +1,50 @@
 #!/usr/bin/env python
 # encoding=utf-8
 
-import os
-from json import dumps
-
 from flask import *
-from xtls.codehelper import no_exception
+from wechatpy import parse_message
 
-from .. import dao
-from ..config import *
+from ..controller.wechat import *
 
-api = Blueprint('api', __name__, url_prefix='/api')
-
-
-@api.route('/download/<hashid>')
-def download(hashid):
-    file_path = os.path.join(os.path.join(FILE_PATH, hashid[:4]), hashid)
-    return send_file(file_path)
+wechat = Blueprint('wechat', __name__, url_prefix='/wechat')
 
 
-@api.route('/cl/download/<hashid>')
-def cl_download(hashid):
-    file_path = os.path.join(os.path.join('/data/t66y', hashid[:4]), hashid)
-    return send_file(file_path)
+@wechat.route('/', methods=['GET', 'POST'])
+def wechat_():
+    if request.method == u'GET':
+        return request.args.get(u'echostr')
+    msg = parse_message(request.data)
+    reply = handle_msg(msg)
+    return reply.render()
 
 
-@api.route('/crawl/<ids>')
-@no_exception('{"code":500, "msg": "insert new task error."}')
-def crawl(ids):
-    ids = ids.split(',')
-    doing = []
-    done = []
-    for _id in ids:
-        # dao.insert(QUESTION_TODO_COLL, {'_id': _id})
-        # doing.append(_id)
-        if not dao.select_one(QUESTION_COLL, {'_id': _id}):
-            dao.insert(QUESTION_TODO_COLL, {'_id': _id})
-            doing.append(_id)
-        else:
-            done.append(_id)
-    return dumps({'code': 200, 'msg': 'insert new task done', 'todo': doing, 'done': done})
+@wechat.route('/nobody')
+@wechat.route('/nobody/<int:page>')
+def nobody(page=1):
+    imgs = dao.get_qbcr_imgs(page)
+    data = {
+        'active': 'nobody',
+        'title': u'佚名图集 - 第 %s 页' % page,
+        'images': imgs,
+    }
+    return render_template('wc_yiming.html', **data)
+
+
+@wechat.route('/cltt/<pid>')
+def cl_detail(pid):
+    post = dao.select_one(T66Y_COLL, {'_id': pid})
+    data = {
+        'title': post['title'],
+        'post': post,
+        'local': request.args.get('local', False)
+    }
+    return render_template('wc_cltt-detail.html', **data)
+
+
+@wechat.route('/about/')
+def about():
+    data = {
+        'active': 'about',
+        'title': u'关于'
+    }
+    return render_template('wc_about.html', **data)
