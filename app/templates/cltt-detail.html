@@ -4,6 +4,16 @@
 <div class="container">
     <div class="main-items col-md-12">
         <div class="zh-qu-title">
+<span class="subtitle">
+            {% if local %}
+                <a class="a-topic" href="{{ url_for('web.cl_detail', pid=post['_id']) }}">raw</a>
+            {% else %}
+                <a class="a-topic" href="{{ url_for('web.cl_detail', pid=post['_id']) }}?local=yes">local</a>
+            {% endif %}
+                </span>
+
+            <code>| -></code>
+
                 <span class="subtitle">
                     <a class="a-topic" href="{{ url_for('web.cltt', cname=post['category']) }}">
                         {{ post['category'] }}
@@ -15,9 +25,6 @@
                         [ {{ post['img_count'] }} <span class="glyphicon glyphicon-picture"></span> ]
                     </span>
             </a>
-                <span class="subtitle">
-
-                </span>
         </div>
         <hr>
         <div class="answers">
@@ -26,7 +33,11 @@
             <div class="nobody-div clearfix">
                 <div class="col-md-3"></div>
                 <div class="col-md-6">
+                    {% if local %}
+                    <img class="img-view" src="{{ url_for('api.cl_download', hashid=img['hash']) }}">
+                    {% else %}
                     <img class="img-view" src="{{ img['url'] }}">
+                    {% endif %}
                 </div>
                 <div class="col-md-3"></div>
             </div>
