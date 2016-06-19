@@ -16,4 +16,7 @@ def create_app():
     from .views.api import api
     app.register_blueprint(api)
 
+    from .views.wechat import wechat
+    app.register_blueprint(wechat)
+
     return app
