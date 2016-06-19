@@ -17,11 +17,11 @@ from config import *
 logger = get_logger(__file__)
 MONGO = MongoClient(MONGO_HOST, MONGO_PORT)
 CATEGORY_PATTERN = re.compile(ur'\[(.+?)\](.+?)\[(\d+)[P|p]\]')
-HOST = 'http://cl.xlzd.me/'
+HOST = 'http://www.t66y.com/'
 
 
 def save(content, filename):
-    save_path = os.path.join(FILE_PATH, filename[:4])
+    save_path = os.path.join('/data/t66y', filename[:4])
     if not os.path.exists(save_path):
         os.mkdir(save_path)
     file_path = os.path.join(save_path, filename)
@@ -45,6 +45,20 @@ class ClCrawler(BaseCrawler):
             })
         return img_list
 
+    @classmethod
+    def mapping_category(cls, category):
+        if category in (u'动漫cos第三期', u'其他'):
+            return category
+        if u'真' in category:
+            return u'写真'
+        if u'洲' in category:
+            return u'亚洲'
+        if u'漫' in category:
+            return u'动漫'
+        if u'美' in category:
+            return u'欧美'
+        return u'其他'
+
     @no_exception(on_exception=None)
     def parse_cat_tr(self, tr):
         tds = tr.find_all('td')
@@ -56,7 +70,7 @@ class ClCrawler(BaseCrawler):
             return None
         data = {
             '_id': sha1(title),
-            'category': title_sp[0][0],
+            'category': self.mapping_category(title_sp[0][0]),
             'title': title_sp[0][1],
             'img_count': int(title_sp[0][2]),
             'raw_path': tds[1].find('a')['href'],
@@ -71,15 +85,13 @@ class ClCrawler(BaseCrawler):
     @classmethod
     def save(cls, data):
         data['update'] = now()
-        MONGO[DB][T66Y_COLL].update_one(
-            {'_id': data['_id']},
-            {'$set': data},
-            upsert=True
-        )
+        try:
+            MONGO[DB][T66Y_COLL].insert_one(data)
+        except:
+            pass
 
     def parse_catalog(self, soup):
         for idx, tr in enumerate(soup.find_all('tr', class_='tr3 t_one'), 1):
-            print idx,
             data = self.parse_cat_tr(tr)
             if not data:
                 continue
@@ -89,7 +101,8 @@ class ClCrawler(BaseCrawler):
 
     def run(self):
         for page in xrange(self.end, self.start - 1, -1):
-            html = self.get('http://www.t66y.com/thread0806.php?fid=8&search=&page=' + str(page))
+            logger.info('crawl t66y page %s' % page)
+            html = self.get(HOST + 'thread0806.php?fid=8&search=&page=' + str(page))
             soup = BeautifulSoup(html)
             self.parse_catalog(soup)
 
