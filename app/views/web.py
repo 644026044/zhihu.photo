@@ -91,7 +91,7 @@ def cltt(cname=None, page=1):
 
     posts, count = dao.select(T66Y_COLL,
                               filter,
-                              limit=10,
+                              limit=PAGE_SIZE,
                               skip=(page - 1) * PAGE_SIZE,
                               sort=('update', -1))
     if not all_:
