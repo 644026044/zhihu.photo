@@ -12,11 +12,14 @@
             {% endif %}
                 </span>
 
-            <code>| -></code>
-
                 <span class="subtitle">
                     <a class="a-topic" href="{{ url_for('web.cltt', cname=post['category']) }}">
                         {{ post['category'] }}
+                    </a>
+                </span>
+                <span class="subtitle">
+                    <a class="a-topic" href="#">
+                        {{ post['update'].strftime('%Y-%m-%d %H:%m:%S') }}
                     </a>
                 </span>
             <a target="_blank" href="http://www.t66y.com/{{ post['raw_path'] }}">

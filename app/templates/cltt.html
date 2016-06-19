@@ -3,7 +3,16 @@
 {% block page_content %}
 <div class="container">
     <div class="page-header" style="margin-top: -10px;">
+
         <h3>草榴贴图</h3>
+
+<span class="subtitle">
+            {% if local %}
+                <a class="a-topic" href="{{ url_for('web.cltt', page=pagination.page) }}">raw</a>
+            {% else %}
+                <a class="a-topic" href="{{ url_for('web.cltt', page=pagination.page) }}?local=yes">local</a>
+            {% endif %}
+                </span>
     </div>
 
     <div class="main-items col-md-12">
@@ -18,7 +27,17 @@
                         {{ post['category'] }}
                     </a>
                 </span>
-                <a href="{{ url_for('web.cl_detail', pid=post['_id']) }}">
+                <span class="subtitle">
+                    <a class="a-topic" href="#">
+                        {{ post['update'].strftime('%Y-%m-%d %H:%m:%S') }}
+                    </a>
+                </span>
+
+            {% if local %}
+             <a href="{{ url_for('web.cl_detail', pid=post['_id']) }}?local=yes">
+            {% else %}
+             <a href="{{ url_for('web.cl_detail', pid=post['_id']) }}">
+            {% endif %}
                     {{ post['title'] }}
                     <span class="subtitle">
                         [ {{ post['img_count'] }} <span class="glyphicon glyphicon-picture"></span> ]
@@ -28,7 +47,11 @@
             <div class="img-wrap-div">
                 {% for img in post['images'][:5] %}
                 <div class="col-md-self-2">
+                    {% if local %}
+                    <img class="img-view" src="{{ url_for('api.cl_download', hashid=img['hash']) }}">
+                    {% else %}
                     <img class="img-view" src="{{ img['url'] }}">
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
