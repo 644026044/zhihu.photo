@@ -39,9 +39,13 @@ class ClCrawler(BaseCrawler):
         soup = BeautifulSoup(self.get(url))
         img_list = []
         for input in soup.find_all('input', type="image"):
+            img = input['src']
+            content = self.get(img)
+            filename = sha1(content) + img[img.rfind('.'):]
+            save(content, filename)
             img_list.append({
-                'url': input['src'],
-                'hash': '',
+                'url': img,
+                'hash': filename,
             })
         return img_list
 
@@ -76,11 +80,17 @@ class ClCrawler(BaseCrawler):
             'raw_path': tds[1].find('a')['href'],
             'pub_date': tds[2].find('div', class_='f10').getText()
         }
+        if self.check_exists(data['_id']):
+            return None
         imgs = self.find_imgs(data['raw_path'])
         if not imgs:
             return None
         data['images'] = imgs
         return data
+
+    @classmethod
+    def check_exists(cls, id_):
+        return MONGO[DB][T66Y_COLL].find_one({'_id': id_})
 
     @classmethod
     def save(cls, data):
