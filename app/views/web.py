@@ -99,5 +99,6 @@ def cl_detail(pid):
     data = {
         'title': post['title'],
         'post': post,
+        'local': request.args.get('local', False)
     }
     return render_template('cltt-detail.html', **data)
