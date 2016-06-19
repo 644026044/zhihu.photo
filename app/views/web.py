@@ -11,7 +11,12 @@ web = Blueprint('web', __name__)
 
 
 @web.route('/')
-@web.route('/<int:page>')
+def hello():
+    return u'<h1 style="text-align: center">尊重版权，从你我做起</h1>'
+
+
+@web.route('/hide')
+@web.route('/hide/<int:page>')
 def index(page=1):
     questions, count = dao.select(QUESTION_COLL, {}, limit=PAGE_SIZE, skip=(page - 1) * PAGE_SIZE)
 
@@ -83,11 +88,16 @@ def cltt(cname=None, page=1):
         filter['category'] = cname
         title = cname + u' - ' + title
 
-    posts, count = dao.select(T66Y_COLL, filter, limit=10, skip=(page - 1) * PAGE_SIZE)
+    posts, count = dao.select(T66Y_COLL,
+                              filter,
+                              limit=10,
+                              skip=(page - 1) * PAGE_SIZE,
+                              sort=('update', -1))
     data = {
         'active': 'cltt',
         'title': title,
         'posts': posts,
+        'local': request.args.get('local', False),
         'pagination': Pagination(page=page, per_page=PAGE_SIZE, total=count, css_framework='bootstrap3')
     }
     return render_template('cltt.html', **data)
