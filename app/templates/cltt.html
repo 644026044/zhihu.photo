@@ -6,13 +6,20 @@
 
         <h3>草榴贴图</h3>
 
-<span class="subtitle">
+            <span class="subtitle">
             {% if local %}
                 <a class="a-topic" href="{{ url_for('web.cltt', page=pagination.page) }}">raw</a>
             {% else %}
                 <a class="a-topic" href="{{ url_for('web.cltt', page=pagination.page) }}?local=yes">local</a>
             {% endif %}
-                </span>
+            </span>
+            <span class="subtitle">
+            {% if all %}
+                <a class="a-topic" href="{{ url_for('web.cltt', page=pagination.page) }}">top5</a>
+            {% else %}
+                <a class="a-topic" href="{{ url_for('web.cltt', page=pagination.page) }}?all=yes">all</a>
+            {% endif %}
+            </span>
     </div>
 
     <div class="main-items col-md-12">
@@ -45,7 +52,7 @@
                 </a>
             </div>
             <div class="img-wrap-div">
-                {% for img in post['images'][:5] %}
+                {% for img in post['images'] %}
                 <div class="col-md-self-2">
                     {% if local %}
                     <img class="img-view" src="{{ url_for('api.cl_download', hashid=img['hash']) }}">
