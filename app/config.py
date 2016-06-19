@@ -9,6 +9,7 @@ DB = 'zhihu_photo'
 ANSWER_COLL = 'answer'
 QUESTION_COLL = 'question'
 QUESTION_TODO_COLL = 'questionTodo'
+T66Y_COLL = 't66y'
 
 PAGE_SIZE = 5
 

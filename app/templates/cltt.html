@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<div class="container">
+    <div class="page-header" style="margin-top: -10px;">
+        <h3>草榴贴图</h3>
+    </div>
+
+    <div class="main-items col-md-12">
+        {% for post in posts %}
+        {% if loop.index != 1 %}
+        <hr>
+        {% endif %}
+        <div class="zh-question-item clearfix">
+            <div class="zh-qu-title">
+                <span class="subtitle">
+                    <a class="a-topic" href="{{ url_for('web.cltt', cname=post['category']) }}">
+                        {{ post['category'] }}
+                    </a>
+                </span>
+                <a href="{{ url_for('web.cl_detail', pid=post['_id']) }}">
+                    {{ post['title'] }}
+                    <span class="subtitle">
+                        [ {{ post['img_count'] }} <span class="glyphicon glyphicon-picture"></span> ]
+                    </span>
+                </a>
+            </div>
+            <div class="img-wrap-div">
+                {% for img in post['images'][:5] %}
+                <div class="col-md-self-2">
+                    <img class="img-view" src="{{ img['url'] }}">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="center_div">
+        {{ pagination.links }}
+    </div>
+
+</div>
+{% endblock %}

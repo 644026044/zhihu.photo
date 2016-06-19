@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<div class="container">
+    <div class="main-items col-md-12">
+        <div class="zh-qu-title">
+                <span class="subtitle">
+                    <a class="a-topic" href="{{ url_for('web.cltt', cname=post['category']) }}">
+                        {{ post['category'] }}
+                    </a>
+                </span>
+            <a target="_blank" href="http://www.t66y.com/{{ post['raw_path'] }}">
+                {{ post['title'] }}
+                    <span class="subtitle">
+                        [ {{ post['img_count'] }} <span class="glyphicon glyphicon-picture"></span> ]
+                    </span>
+            </a>
+                <span class="subtitle">
+
+                </span>
+        </div>
+        <hr>
+        <div class="answers">
+            {% for img in post['images'] %}
+
+            <div class="nobody-div clearfix">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <img class="img-view" src="{{ img['url'] }}">
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <hr>
+    <div class="ds-thread" data-thread-key="{{ post['_id'] }}" data-title="{{ title }} - 图看知乎"
+         data-url="http://zhihu.photo/cltt/detail/{{ post['_id'] }}"></div>
+
+</div>
+{% endblock %}
