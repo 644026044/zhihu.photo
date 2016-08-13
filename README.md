@@ -2,6 +2,23 @@
 
 ---
 
+
+## 效果图
+
+#### 知乎钓鱼答回答
+
+![zhihu](screens/zhihu.png)
+
+#### 草榴贴图
+
+![t66y](screens/t66y.png)
+
+#### 其他
+
+![nobody](screens/nobody.png)
+
+---
+
 ## 更新
 
 #### 最初想法
